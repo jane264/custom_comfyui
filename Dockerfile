@@ -1,10 +1,12 @@
 FROM runpod/worker-comfyui:5.1.0-base
 
-ARG CIVITAI_TOKEN
+# Install curl
+RUN apt-get update && apt-get install -y curl
 
-RUN comfy model download \
- --url "https://civitai.com/api/download/models/2611295?token=${CIVITAI_TOKEN}" \
- --relative-path models/checkpoints \
- --filename cyberrealisticXL_v4.safetensors
-
-#COPY input/ /comfyui/input/
+# Start script: download model at container start (not build time)
+CMD if [ ! -f /comfyui/models/checkpoints/cyberrealisticXL_v4.safetensors ]; then \
+      curl -L -H "Authorization: Bearer $CIVITAI_API_KEY" \
+      "https://civitai.com/api/download/models/2611295" \
+      -o /comfyui/models/checkpoints/cyberrealisticXL_v4.safetensors ; \
+    fi && \
+    /start.sh
