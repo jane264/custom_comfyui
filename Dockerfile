@@ -1,6 +1,7 @@
-FROM runpod/worker-comfyui:5.1.0
 
-# Download SDXL model
-RUN comfy-model-download \
-  --url https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors \
-  --output checkpoints/sd_xl_base_1.0.safetensors
+FROM runpod/worker-comfyui:5.1.0-base
+
+RUN comfy model download \
+ --url "https://civitai.com/api/download/models/2611295?type=Model&format=SafeTensor&size=full&token=e7a7a2bce2b27056e65f094a1700ee00" \
+ --relative-path models/checkpoints \
+ --filename cyberrealisticXL_v4.safetensors
